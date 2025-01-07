@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
+  @Get('movie')
   getMovies() {
     return [
       {
@@ -21,7 +21,7 @@ export class AppController {
     ];
   }
 
-  @Get()
+  @Get('movie/:id')
   getMovie() {
     return {
       id: '1',
@@ -30,7 +30,7 @@ export class AppController {
     };
   }
 
-  @Post()
+  @Post('movie')
   postMovie() {
     return {
       id: '3',
@@ -39,7 +39,7 @@ export class AppController {
     };
   }
 
-  @Patch()
+  @Patch('movie/:id')
   patchMovie() {
     return {
       id: '3',
@@ -48,7 +48,7 @@ export class AppController {
     };
   }
 
-  @Delete()
+  @Delete('movie/:id')
   deleteMovie() {
     return 3;
   }
