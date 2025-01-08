@@ -1,4 +1,4 @@
-import { Equals, IsArray, IsBoolean, IsDate, IsDateString, IsDefined, IsEmpty, IsEnum, IsIn, IsInt, IsNotEmpty, IsNotIn, IsNumber, IsObject, IsOptional, IsString, NotEquals } from 'class-validator';
+import { Equals, IsArray, IsBoolean, IsDate, IsDateString, IsDefined, IsDivisibleBy, IsEmpty, IsEnum, IsIn, IsInt, IsNegative, IsNotEmpty, IsNotIn, IsNumber, IsObject, IsOptional, IsPositive, IsString, Max, Min, NotEquals } from 'class-validator';
 
 
 enum MovieGenre {
@@ -33,5 +33,11 @@ export class UpdateMovieDto {
   @IsDate() // Date 객체 일 때 통과
   @IsDateString() // Date 문자열 일 때 통과. 예) "2025-01-01T12:00"
   @IsObject() // 객체 일 때 통과
+  // 숫자
+  @IsDivisibleBy(10) // 10의 배수일 때 통과
+  @IsPositive() // 양수일 때 통과
+  @IsNegative() // 음수일 때 통과
+  @Min(100) // 최소값 100 이상일 때 통과
+  @Max(1000) // 최대값 1000 이하일 때 통과
   test: string;
 }
