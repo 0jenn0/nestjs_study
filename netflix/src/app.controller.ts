@@ -53,13 +53,17 @@ export class AppController {
     return movie; // 왜 return movie 하는가? 클라이언트에서도 id를 알 수 있도록 하기 위해서
   }
 
-  @Patch(':id')
-  patchMovie() {
-    return {
-      id: '3',
-      name: '어벤져스',
-      character: ['토니스타크', '블랙위도우'],
-    };
+  @Patch(':id') // id는 절대 바뀔 일 없어야한다.
+  patchMovie(@Param('id') id: string, @Body('title') title: string) {
+    const movie = this.movies.find((movie) => movie.id === +id);
+
+    if (!movie) {
+      throw new NotFoundException(`ID ${id} 영화가 없습니다.`);
+    }
+
+    Object.assign(movie, { title });
+
+    return movie;
   }
 
   @Delete(':id')
