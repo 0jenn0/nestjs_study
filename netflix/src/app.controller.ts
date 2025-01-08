@@ -67,7 +67,14 @@ export class AppController {
   }
 
   @Delete(':id')
-  deleteMovie() {
-    return 3;
+  deleteMovie(@Param('id') id: string) {
+    const movieIndex = this.movies.findIndex((movie) => movie.id === +id);
+
+    if (movieIndex === -1) {
+      throw new NotFoundException(`ID ${id} 영화가 없습니다.`);
+    }
+    this.movies.splice(movieIndex, 1);
+
+    return id;
   }
 }
