@@ -1,17 +1,24 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 
 interface Movie {
-  id: string;
+  id: number;
   title: string;
 }
 
 @Controller('movie')
 export class AppController {
   private movies: Movie[] = [
-    { id: '1', title: '해리포터' },
-    { id: '2', title: '반지의 제왕' },
-    { id: '3', title: '어벤져스' },
+    { id: 1, title: '해리포터' },
+    { id: 2, title: '반지의 제왕' },
   ];
 
   constructor(private readonly appService: AppService) {}
@@ -22,12 +29,15 @@ export class AppController {
   }
 
   @Get(':id')
-  getMovie() {
-    return {
-      id: '1',
-      name: '해리포터',
-      character: ['해리포터', '에미왓슨'],
-    };
+  getMovie(@Param('id') id: string) {
+    const movie = this.movies.find((movie) => movie.id === +id);
+
+    if (!movie) {
+      // throw new Error(`Movie with ID ${id} not found`); // 이렇게하면 걍 500 에러 뜸
+      throw new NotFoundException(`ID ${id} 영화가 없습니다.`); // 에러 메시지와 함께 404 에러 뜸
+    }
+
+    return movie;
   }
 
   @Post()
