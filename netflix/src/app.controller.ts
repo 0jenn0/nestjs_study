@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -41,12 +42,15 @@ export class AppController {
   }
 
   @Post()
-  postMovie() {
-    return {
-      id: '3',
-      name: '어벤져스',
-      character: ['토니스타크', '스티브로저스'],
+  postMovie(@Body('title') title: string) {
+    const movie: Movie = {
+      id: this.movies.length + 1,
+      title,
     };
+
+    this.movies.push(movie);
+
+    return movie; // 왜 return movie 하는가? 클라이언트에서도 id를 알 수 있도록 하기 위해서
   }
 
   @Patch(':id')
