@@ -1,4 +1,4 @@
-import { Equals, IsArray, IsBoolean, IsDate, IsDateString, IsDefined, IsDivisibleBy, IsEmpty, IsEnum, IsIn, IsInt, IsNegative, IsNotEmpty, IsNotIn, IsNumber, IsObject, IsOptional, IsPositive, IsString, Max, Min, NotEquals } from 'class-validator';
+import { Equals, IsAlphanumeric, IsArray, IsBoolean, IsCreditCard, IsDate, IsDateString, IsDefined, IsDivisibleBy, IsEmpty, IsEnum, IsHexColor, IsIn, IsInt, IsNegative, IsNotEmpty, IsNotIn, IsNumber, IsObjecMinLength, t, IsOptional, IsPositive, IsString, Max, MaxLength, Min, NotContains, NotEquals, MinLength, IsUUID, IsObject, IsLatLong } from 'class-validator';
 
 
 enum MovieGenre {
@@ -39,5 +39,14 @@ export class UpdateMovieDto {
   @IsNegative() // 음수일 때 통과
   @Min(100) // 최소값 100 이상일 때 통과
   @Max(1000) // 최대값 1000 이하일 때 통과
+  // 문자
+  @NotContains('test') // 'test'가 포함되지 않을 때 통과
+  @IsAlphanumeric() // 알파벳과 숫자만 포함될 때 통과
+  @IsCreditCard() // 신용카드 번호일 때 통과
+  @IsHexColor() // 16진수 색상일 때 통과
+  @MaxLength(10) // 최대 10자 이하일 때 통과
+  @MinLength(10) // 최소 10자 이상일 때 통과
+  @IsUUID() // UUID 일 때 통과
+  @IsLatLong() // 위도, 경도 일 때 통과
   test: string;
 }
