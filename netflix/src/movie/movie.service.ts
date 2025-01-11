@@ -36,6 +36,7 @@ export class MovieService {
       where: {
         id,
       },
+      relations: ['detail'],
     });
 
     if (!movie) {
