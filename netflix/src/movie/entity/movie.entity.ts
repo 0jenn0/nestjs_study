@@ -1,8 +1,29 @@
-import { Transform } from 'class-transformer';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  UpdateDateColumn,
+  CreateDateColumn,
+  VersionColumn,
+} from 'typeorm';
 
+@Entity()
 export class Movie {
+  @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
   title: string;
-  @Transform(({ value }) => value.toUpperCase())
+
+  @Column()
   genre: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @VersionColumn()
+  version: number;
 }
