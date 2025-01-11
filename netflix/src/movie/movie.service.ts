@@ -94,6 +94,7 @@ export class MovieService {
       where: {
         id,
       },
+      relations: ['detail'],
     });
 
     if (!movie) {
@@ -101,7 +102,7 @@ export class MovieService {
     }
 
     await this.movieRepository.delete(id);
-
+    await this.movieDetailRepository.delete({ id: movie.detail.id });
     return id;
   }
 }
