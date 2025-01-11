@@ -1,9 +1,9 @@
-import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, OneToOne } from 'typeorm';
 import { Movie } from './movie.entity';
 
 @Entity()
 export class MovieDetail {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
