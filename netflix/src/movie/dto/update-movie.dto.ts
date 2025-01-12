@@ -1,14 +1,21 @@
-import { Genre } from '@/genre/entities/genre.entity';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 
 export class UpdateMovieDto {
   @IsNotEmpty()
   @IsOptional()
   title?: string;
 
-  @IsNotEmpty()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNumber({}, { each: true })
   @IsOptional()
-  genres?: Genre[];
+  genreIds?: number[];
 
   @IsNotEmpty()
   @IsOptional()
