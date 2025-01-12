@@ -5,7 +5,7 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { BaseTable } from './base-table.entity';
+import { BaseTable } from '../../common/entity/base-table.entity';
 import { MovieDetail } from './movie-detail.entity';
 
 // ManyToOne Director -> 감독은 여러개의 영화를 만들 수 있음
