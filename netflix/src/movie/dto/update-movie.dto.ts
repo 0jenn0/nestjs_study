@@ -1,3 +1,4 @@
+import { Genre } from '@/genre/entities/genre.entity';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class UpdateMovieDto {
@@ -7,7 +8,7 @@ export class UpdateMovieDto {
 
   @IsNotEmpty()
   @IsOptional()
-  genre?: string;
+  genres?: Genre[];
 
   @IsNotEmpty()
   @IsOptional()
