@@ -289,7 +289,13 @@ export class MovieService {
       throw new NotFoundException(`ID ${id} 영화가 없습니다.`);
     }
 
-    await this.movieRepository.delete(id);
+    this.movieRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Movie)
+      .where('id = :id', { id })
+      .execute();
+    // await this.movieRepository.delete(id);
     await this.movieDetailRepository.delete({ id: movie.detail.id });
     return id;
   }
