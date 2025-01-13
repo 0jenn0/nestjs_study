@@ -12,9 +12,9 @@
 | 6. 유효성 검사 및 변환 | ✅ |
 | 7. 환경변수 | ✅ |
 | 8. 데이터베이스 | ✅ |
-| 9. Pipe | ❌ |
-| 10. Mapped Types | ❌ |
-| 11. Serialization | ❌ |
+| 9. Pipe | ✅ |
+| 10. Mapped Types | ✅ |
+| 11. Serialization | ✅ |
 | 12. 인증 | ❌ |
 | 13. Middleware | ❌ |
 
