@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseInterceptors,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -25,8 +26,8 @@ export class MovieController {
   }
 
   @Get(':id')
-  getMovie(@Param('id') id: string) {
-    return this.movieService.findOne(+id);
+  getMovie(@Param('id', ParseIntPipe) id: number) {
+    return this.movieService.findOne(id);
   }
 
   @Post()
@@ -35,12 +36,15 @@ export class MovieController {
   }
 
   @Patch(':id') // id는 절대 바뀔 일 없어야한다.
-  patchMovie(@Param('id') id: string, @Body() body: UpdateMovieDto) {
-    return this.movieService.update(+id, body);
+  patchMovie(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateMovieDto,
+  ) {
+    return this.movieService.update(id, body);
   }
 
   @Delete(':id')
-  deleteMovie(@Param('id') id: string) {
-    return this.movieService.remove(+id);
+  deleteMovie(@Param('id', ParseIntPipe) id: number) {
+    return this.movieService.remove(id);
   }
 }
