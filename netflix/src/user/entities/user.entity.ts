@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, BaseEntity, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum Role {
@@ -17,6 +18,10 @@ export class User extends BaseEntity {
   email: string;
 
   @Column()
+  @Exclude({
+    // toClassOnly: true, // 요청을 받을 때 제외
+    toPlainOnly: true, // 응답을 보낼 때 제외
+  })
   password: string;
 
   @Column({
