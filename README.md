@@ -15,8 +15,8 @@
 | 9. Pipe                                 |  ✅  |
 | 10. Mapped Types                        |  ✅  |
 | 11. Serialization                       |  ✅  |
-| 12. 인증                                |  ❌  |
-| 13. Middleware                          |  ❌  |
+| 12. 인증                                |  ✅  |
+| 13. Middleware                          |  ✅  |
 
 </br>
 
