@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { envVariablesKeys } from '@/common/const/env.const';
 
 @Injectable()
 export class AuthService {
@@ -55,7 +56,9 @@ export class AuthService {
     }
 
     const payload = await this.jwtService.verifyAsync(token, {
-      secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+      secret: this.configService.get<string>(
+        envVariablesKeys.accessTokenSecret,
+      ),
     });
 
     if (!isRefreshToken) {
@@ -83,7 +86,7 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(
       password,
-      this.configService.get<number>('HASH_ROUNDS'),
+      this.configService.get<number>(envVariablesKeys.hashRounds),
     );
 
     await this.userRepository.save({ email, password: hashedPassword });
@@ -109,10 +112,10 @@ export class AuthService {
 
   async issueToken(user: { id: number; role: Role }, isRefresh: boolean) {
     const refreshTokenSecret = this.configService.get<string>(
-      'REFRESH_TOKEN_SECRET',
+      envVariablesKeys.refreshTokenSecret,
     );
     const accessTokenSecret = this.configService.get<string>(
-      'ACCESS_TOKEN_SECRET',
+      envVariablesKeys.accessTokenSecret,
     );
 
     return await this.jwtService.signAsync(
