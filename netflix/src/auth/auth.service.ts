@@ -1,6 +1,10 @@
 import { ConfigService } from '@nestjs/config';
 import { Role, User } from '@/user/entities/user.entity';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -55,23 +59,30 @@ export class AuthService {
       throw new BadRequestException('토큰 포맷이 잘못됐습니다.');
     }
 
-    const payload = await this.jwtService.verifyAsync(token, {
-      secret: this.configService.get<string>(
-        envVariablesKeys.accessTokenSecret,
-      ),
-    });
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: this.configService.get<string>(
+          isRefreshToken
+            ? envVariablesKeys.refreshTokenSecret
+            : envVariablesKeys.accessTokenSecret,
+        ),
+      });
 
-    if (!isRefreshToken) {
-      if (payload.type !== 'access') {
-        throw new BadRequestException('토큰 포맷이 잘못됐습니다.');
+      if (!isRefreshToken) {
+        if (payload.type !== 'access') {
+          throw new BadRequestException('토큰 포맷이 잘못됐습니다.');
+        }
+      } else {
+        if (payload.type !== 'refresh') {
+          throw new BadRequestException('토큰 포맷이 잘못됐습니다.');
+        }
       }
-    } else {
-      if (payload.type !== 'refresh') {
-        throw new BadRequestException('토큰 포맷이 잘못됐습니다.');
-      }
+
+      return payload;
+    } catch (e) {
+      console.error(e);
+      throw new UnauthorizedException('토큰이 만료됐습니다.');
     }
-
-    return payload;
   }
 
   // rawToken -> "Basic token"
