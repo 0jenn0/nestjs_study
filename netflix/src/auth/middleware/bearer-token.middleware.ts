@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NestMiddleware,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { NextFunction, Response, Request } from 'express';
 import { envVariablesKeys } from '@/common/const/env.const';
@@ -23,16 +24,15 @@ export class BearerTokenMiddleware implements NestMiddleware {
       return;
     }
 
-    const token = this.validateBearerToken(authHeader);
-
     try {
+      const token = this.validateBearerToken(authHeader);
       const decodedPayload = this.jwtService.decode(token); // decode: 토큰을 디코딩하여 페이로드를 얻는다. 만료가됐는지 이런거 검증 안한다.
 
       if (
         decodedPayload.type !== 'refresh' &&
         decodedPayload.type !== 'access'
       ) {
-        throw new BadRequestException('잘못된 토큰입니다.');
+        throw new UnauthorizedException('잘못된 토큰입니다.');
       }
 
       const secretKey =
@@ -47,7 +47,7 @@ export class BearerTokenMiddleware implements NestMiddleware {
       req.user = payload;
       next();
     } catch {
-      throw new BadRequestException('토큰이 만료됐습니다!');
+      next();
     }
   }
 
