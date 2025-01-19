@@ -26,9 +26,9 @@
 
 | Part                 | 완료 |
 | :------------------- | :--: |
-| 14. GUARD            |  ❌  |
-| 15. RBAC             |  ❌  |
-| 16. Postman          |  ❌  |
+| 14. GUARD            |  ✅  |
+| 15. RBAC             |  ✅  |
+| 16. Postman          |  ✅  |
 | 17. Pagination       |  ❌  |
 | 18. Interceptor      |  ❌  |
 | 19. Exception        |  ❌  |
