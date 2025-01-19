@@ -18,6 +18,8 @@ import { ClassSerializerInterceptor } from '@nestjs/common';
 import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
 import { AuthGuard } from '@/auth/guard/auth.guard';
 import { Public } from '@/auth/decorator/public.decorator';
+import { RBAC } from '@/auth/decorator/rbac.decorator';
+import { Role } from '@/user/entities/user.entity';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 이거 추가해야 class-transformer 사용 가능
@@ -31,17 +33,20 @@ export class MovieController {
   }
 
   @Get(':id')
+  @Public()
   getMovie(@Param('id', ParseIntPipe) id: number) {
     return this.movieService.findOne(id);
   }
 
   @Post()
+  @RBAC(Role.admin)
   @UseGuards(AuthGuard)
   postMovie(@Body() body: CreateMovieDto) {
     return this.movieService.create(body);
   }
 
   @Patch(':id') // id는 절대 바뀔 일 없어야한다.
+  @RBAC(Role.admin)
   patchMovie(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateMovieDto,
@@ -50,6 +55,7 @@ export class MovieController {
   }
 
   @Delete(':id')
+  @RBAC(Role.admin)
   deleteMovie(@Param('id', ParseIntPipe) id: number) {
     return this.movieService.remove(id);
   }
