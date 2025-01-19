@@ -15,11 +15,11 @@ import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { ClassSerializerInterceptor } from '@nestjs/common';
-import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
 import { AuthGuard } from '@/auth/guard/auth.guard';
 import { Public } from '@/auth/decorator/public.decorator';
 import { RBAC } from '@/auth/decorator/rbac.decorator';
 import { Role } from '@/user/entities/user.entity';
+import { GetMovieDto } from './dto/get-movie.dto';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 이거 추가해야 class-transformer 사용 가능
@@ -28,8 +28,8 @@ export class MovieController {
 
   @Get()
   @Public()
-  getMovies(@Query('title', MovieTitleValidationPipe) title?: string) {
-    return this.movieService.findAll(title);
+  getMovies(@Query() dto: GetMovieDto) {
+    return this.movieService.findAll(dto);
   }
 
   @Get(':id')

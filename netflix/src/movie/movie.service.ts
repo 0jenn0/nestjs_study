@@ -7,8 +7,11 @@ import { DataSource, In, Repository } from 'typeorm';
 import { MovieDetail } from './entity/movie-detail.entity';
 import { Director } from '@/director/entity/director.entity';
 import { Genre } from '@/genre/entities/genre.entity';
+import { GetMovieDto } from './dto/get-movie.dto';
+import { CommonService } from '@/common/common.service';
 
 @Injectable()
+// export class MovieService extends CommonService { // 이렇게 하면 상속받아서도 가능
 export class MovieService {
   constructor(
     @InjectRepository(Movie)
@@ -24,9 +27,13 @@ export class MovieService {
     private readonly genreRepository: Repository<Genre>,
 
     private readonly dataSource: DataSource,
+
+    private readonly commonService: CommonService,
   ) {}
 
-  async findAll(title?: string) {
+  async findAll(dto: GetMovieDto) {
+    const { title, take, page } = dto;
+
     const qb = this.movieRepository
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.director', 'director')
@@ -34,6 +41,10 @@ export class MovieService {
 
     if (title) {
       qb.where('movie.title LIKE :title', { title: `%${title}%` });
+    }
+
+    if (take && page) {
+      this.commonService.applyPagePaginationParamsToQb(qb, dto);
     }
 
     return await qb.getManyAndCount();
