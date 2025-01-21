@@ -29,7 +29,7 @@
 | 14. GUARD            |  ✅  |
 | 15. RBAC             |  ✅  |
 | 16. Postman          |  ✅  |
-| 17. Pagination       |  ❌  |
+| 17. Pagination       |  ✅  |
 | 18. Interceptor      |  ❌  |
 | 19. Exception        |  ❌  |
 | 20. File Upload      |  ❌  |
