@@ -27,7 +27,8 @@ import { CacheInterceptor } from '@/common/interceptor/cache.interceptor';
 import { TransactionInterceptor } from '@/common/interceptor/transaction.interceptor';
 import {
   // FileInterceptor,
-  FilesInterceptor,
+  // FilesInterceptor,
+  FileFieldsInterceptor,
 } from '@nestjs/platform-express';
 
 @Controller('movie')
@@ -52,11 +53,26 @@ export class MovieController {
   @RBAC(Role.admin)
   // @UseGuards(AuthGuard)
   @UseInterceptors(TransactionInterceptor)
-  @UseInterceptors(FilesInterceptor('movies'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      {
+        name: 'movie',
+        maxCount: 1,
+      },
+      {
+        name: 'poster',
+        maxCount: 2,
+      },
+    ]),
+  )
   postMovie(
     @Body() body: CreateMovieDto,
     @Req() req,
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles()
+    files: {
+      movie?: Express.Multer.File[];
+      poster?: Express.Multer.File[];
+    },
   ) {
     console.log('--------------------------------');
     console.log(files);
