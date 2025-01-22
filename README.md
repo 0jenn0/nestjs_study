@@ -30,8 +30,8 @@
 | 15. RBAC             |  ✅  |
 | 16. Postman          |  ✅  |
 | 17. Pagination       |  ✅  |
-| 18. Interceptor      |  ❌  |
-| 19. Exception        |  ❌  |
+| 18. Interceptor      |  ✅  |
+| 19. Exception        |  ✅  |
 | 20. File Upload      |  ❌  |
 | 21. Custom Decorator |  ❌  |
 | 22. 좋아요 시스템    |  ❌  |
