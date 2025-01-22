@@ -7,11 +7,20 @@ import { MovieDetail } from './entity/movie-detail.entity';
 import { Director } from '@/director/entity/director.entity';
 import { Genre } from '@/genre/entities/genre.entity';
 import { CommonModule } from '@/common/common.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { join } from 'path';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Movie, MovieDetail, Director, Genre]),
     CommonModule,
+    MulterModule.register({
+      storage: diskStorage({
+        // 로컬, 즉 서버의 파일 시스템에다가 저장.
+        destination: join(process.cwd(), 'public', 'movie'),
+      }),
+    }),
   ],
   controllers: [MovieController],
   providers: [MovieService],

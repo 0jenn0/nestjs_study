@@ -11,6 +11,7 @@ import {
   ParseIntPipe,
   // UseGuards,
   Req,
+  UploadedFile,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -23,6 +24,7 @@ import { Role } from '@/user/entities/user.entity';
 import { GetMovieDto } from './dto/get-movie.dto';
 import { CacheInterceptor } from '@/common/interceptor/cache.interceptor';
 import { TransactionInterceptor } from '@/common/interceptor/transaction.interceptor';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 이거 추가해야 class-transformer 사용 가능
@@ -46,7 +48,13 @@ export class MovieController {
   @RBAC(Role.admin)
   // @UseGuards(AuthGuard)
   @UseInterceptors(TransactionInterceptor)
-  postMovie(@Body() body: CreateMovieDto, @Req() req) {
+  @UseInterceptors(FileInterceptor('movie'))
+  postMovie(
+    @Body() body: CreateMovieDto,
+    @Req() req,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log(file);
     return this.movieService.create(body, req.queryRunner);
   }
 
