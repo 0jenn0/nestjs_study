@@ -33,7 +33,7 @@ import {
   // FileFieldsInterceptor,
   FileInterceptor,
 } from '@nestjs/platform-express';
-import { MovieFilePipe } from './pipe/movie-file.pipe';
+// import { MovieFilePipe } from './pipe/movie-file.pipe';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 이거 추가해야 class-transformer 사용 가능
@@ -78,13 +78,7 @@ export class MovieController {
   postMovie(
     @Body() body: CreateMovieDto,
     @Req() req,
-    @UploadedFile(
-      new MovieFilePipe({
-        maxSize: 20000000,
-        mimetype: 'video/mp4',
-      }),
-    )
-    movie: Express.Multer.File,
+    @UploadedFile() movie: Express.Multer.File,
   ) {
     console.log('--------------------------------');
     console.log(movie);
