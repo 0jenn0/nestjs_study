@@ -9,6 +9,7 @@ import { Director } from '@/director/entity/director.entity';
 import { Genre } from '@/genre/entities/genre.entity';
 import { GetMovieDto } from './dto/get-movie.dto';
 import { CommonService } from '@/common/common.service';
+import { join } from 'path';
 
 @Injectable()
 // export class MovieService extends CommonService { // 이렇게 하면 상속받아서도 가능
@@ -94,7 +95,11 @@ export class MovieService {
     // return movie;
   }
 
-  async create(createMovieDto: CreateMovieDto, qr: QueryRunner) {
+  async create(
+    createMovieDto: CreateMovieDto,
+    movieFilePath: string,
+    qr: QueryRunner,
+  ) {
     const director = await qr.manager.findOne(Director, {
       where: { id: createMovieDto.directorId },
     });
@@ -128,6 +133,8 @@ export class MovieService {
 
     const movieDetailId = movieDetail.identifiers[0].id;
 
+    const movieFolder = join('public', 'movie');
+
     const movie = await qr.manager
       .createQueryBuilder()
       .insert()
@@ -138,6 +145,7 @@ export class MovieService {
           id: movieDetailId,
         },
         director,
+        movieFilePath: join(movieFolder, movieFilePath),
       })
       .execute();
 

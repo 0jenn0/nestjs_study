@@ -78,12 +78,10 @@ export class MovieController {
   postMovie(
     @Body() body: CreateMovieDto,
     @Req() req,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @UploadedFile() movie: Express.Multer.File,
   ) {
-    console.log('--------------------------------');
-    console.log(movie);
-
-    return this.movieService.create(body, req.queryRunner);
+    return this.movieService.create(body, movie.filename, req.queryRunner);
   }
 
   @Patch(':id') // id는 절대 바뀔 일 없어야한다.
