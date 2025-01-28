@@ -13,8 +13,6 @@ import {
   Req,
   // UploadedFile,
   // UploadedFiles,
-  BadRequestException,
-  UploadedFile,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -27,12 +25,10 @@ import { Role } from '@/user/entities/user.entity';
 import { GetMovieDto } from './dto/get-movie.dto';
 import { CacheInterceptor } from '@/common/interceptor/cache.interceptor';
 import { TransactionInterceptor } from '@/common/interceptor/transaction.interceptor';
-import {
-  // FileInterceptor,
-  // FilesInterceptor,
-  // FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-express';
+import {} from // FileInterceptor,
+// FilesInterceptor,
+// FileFieldsInterceptor,
+'@nestjs/platform-express';
 // import { MovieFilePipe } from './pipe/movie-file.pipe';
 
 @Controller('movie')
@@ -57,31 +53,8 @@ export class MovieController {
   @RBAC(Role.admin)
   // @UseGuards(AuthGuard)
   @UseInterceptors(TransactionInterceptor)
-  @UseInterceptors(
-    FileInterceptor('movie', {
-      limits: {
-        fileSize: 20000000,
-      },
-      fileFilter: (req, file, cb) => {
-        console.log(file);
-
-        if (file.mimetype !== 'video/mp4')
-          return cb(
-            new BadRequestException('mp4 타입만 업로드 가능합니다!'),
-            false,
-          );
-
-        return cb(null, true);
-      },
-    }),
-  )
-  postMovie(
-    @Body() body: CreateMovieDto,
-    @Req() req,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @UploadedFile() movie: Express.Multer.File,
-  ) {
-    return this.movieService.create(body, movie.filename, req.queryRunner);
+  postMovie(@Body() body: CreateMovieDto, @Req() req) {
+    return this.movieService.create(body, req.queryRunner);
   }
 
   @Patch(':id') // id는 절대 바뀔 일 없어야한다.
