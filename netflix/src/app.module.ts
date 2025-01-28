@@ -25,6 +25,8 @@ import { RBACGuard } from './auth/guard/rbac.guard';
 import { ResponseTimeInterceptor } from './common/interceptor/response-time.interceptor';
 import { ForbiddenExceptionFilter } from './common/filter/forbidden.filter';
 import { QueryFailedErrorFilter } from './common/filter/query-failed.filter';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -67,6 +69,10 @@ import { QueryFailedErrorFilter } from './common/filter/query-failed.filter';
     //   // 이렇게하면 production 데이터베이스가 날아갈 수 있는 여지가 있기 때문이다.
     //   // production 모드에서는 보통 싱크를 migration으로 해결한다.
     // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'public'),
+      serveRoot: '/public', // 이렇게 하면 브라우저에서 /public/movie/ 이런식으로 접근할 수 있다.
+    }),
     MovieModule,
     DirectorModule,
     GenreModule,
