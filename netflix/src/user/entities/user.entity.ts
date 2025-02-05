@@ -1,3 +1,4 @@
+import { MovieUserLike } from '@/movie/entity/movie-user-like.entity';
 import { Movie } from '@/movie/entity/movie.entity';
 import { Exclude } from 'class-transformer';
 import {
@@ -39,4 +40,7 @@ export class User extends BaseEntity {
     default: Role.user,
   })
   role: Role;
+
+  @OneToMany(() => MovieUserLike, movieUserLike => movieUserLike.user)
+  likedMovies: MovieUserLike[];
 }
