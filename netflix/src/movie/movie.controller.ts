@@ -10,7 +10,7 @@ import {
   UseInterceptors,
   ParseIntPipe,
   // UseGuards,
-  Req,
+
   // UploadedFile,
   // UploadedFiles,
 } from '@nestjs/common';
@@ -30,6 +30,8 @@ import {} from // FileInterceptor,
 // FileFieldsInterceptor,
 '@nestjs/platform-express';
 import { UserId } from '@/user/decorator/user-id.decorator';
+import { QueryRunner } from '@/common/decorator/query-runner.decorator';
+import { QueryRunner as QR } from 'typeorm';
 // import { MovieFilePipe } from './pipe/movie-file.pipe';
 
 @Controller('movie')
@@ -57,9 +59,9 @@ export class MovieController {
   postMovie(
     @Body() body: CreateMovieDto,
     @UserId() userId: number,
-    @Req() req,
+    @QueryRunner() queryRunner: QR,
   ) {
-    return this.movieService.create(body, userId, req.queryRunner);
+    return this.movieService.create(body, userId, queryRunner);
   }
 
   @Patch(':id') // id는 절대 바뀔 일 없어야한다.
