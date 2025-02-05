@@ -29,6 +29,7 @@ import {} from // FileInterceptor,
 // FilesInterceptor,
 // FileFieldsInterceptor,
 '@nestjs/platform-express';
+import { UserId } from '@/user/decorator/user-id.decorator';
 // import { MovieFilePipe } from './pipe/movie-file.pipe';
 
 @Controller('movie')
@@ -53,8 +54,12 @@ export class MovieController {
   @RBAC(Role.admin)
   // @UseGuards(AuthGuard)
   @UseInterceptors(TransactionInterceptor)
-  postMovie(@Body() body: CreateMovieDto, @Req() req) {
-    return this.movieService.create(body, req.queryRunner);
+  postMovie(
+    @Body() body: CreateMovieDto,
+    @UserId() userId: number,
+    @Req() req,
+  ) {
+    return this.movieService.create(body, userId, req.queryRunner);
   }
 
   @Patch(':id') // id는 절대 바뀔 일 없어야한다.
