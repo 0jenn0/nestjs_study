@@ -55,6 +55,7 @@ export class MovieService {
     const cacheData = await this.cacheManager.get('MOVIE_RECENT');
 
     if (cacheData) {
+      console.log('cache 가져옴!');
       return cacheData;
     }
 
@@ -65,7 +66,7 @@ export class MovieService {
       take: 10,
     });
 
-    await this.cacheManager.set('MOVIE_RECENT', data, 0); // 이 곳 ttl이 상위 ttl를 오버라이드한다.
+    await this.cacheManager.set('MOVIE_RECENT', data);
 
     return data;
   }

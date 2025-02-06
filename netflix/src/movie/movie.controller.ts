@@ -33,6 +33,11 @@ import { UserId } from '@/user/decorator/user-id.decorator';
 import { QueryRunner } from '@/common/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
 // import { MovieFilePipe } from './pipe/movie-file.pipe';
+import {
+  CacheKey,
+  CacheTTL,
+  CacheInterceptor as CI,
+} from '@nestjs/cache-manager';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 이거 추가해야 class-transformer 사용 가능
@@ -47,7 +52,11 @@ export class MovieController {
   }
 
   @Get('recent')
+  @UseInterceptors(CI)
+  @CacheKey('getMovieRecent') // 이거 없으면 url이 key가 되서 캐시된다. 이 값이 있으면 url이 아닌 url 변화와 상관없이 모두 이 값으로 캐시된다.
+  @CacheTTL(1_000)
   getMovieRecent() {
+    console.log('getMovieRecent() 실행!');
     return this.movieService.findRecent();
   }
 
