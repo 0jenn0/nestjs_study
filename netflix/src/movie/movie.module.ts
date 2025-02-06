@@ -9,7 +9,6 @@ import { Genre } from '@/genre/entities/genre.entity';
 import { CommonModule } from '@/common/common.module';
 import { User } from '@/user/entities/user.entity';
 import { MovieUserLike } from './entity/movie-user-like.entity';
-import { CacheModule } from '@nestjs/cache-manager';
 // import { MulterModule } from '@nestjs/platform-express';
 // import { diskStorage } from 'multer';
 // import { join } from 'path';
@@ -26,9 +25,6 @@ import { CacheModule } from '@nestjs/cache-manager';
       MovieUserLike,
     ]),
     CommonModule,
-    CacheModule.register({
-      ttl: 3_000,
-    }),
     // MulterModule.register({
     //   storage: diskStorage({
     //     // 로컬, 즉 서버의 파일 시스템에다가 저장.

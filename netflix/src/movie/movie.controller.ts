@@ -56,7 +56,6 @@ export class MovieController {
   @CacheKey('getMovieRecent') // 이거 없으면 url이 key가 되서 캐시된다. 이 값이 있으면 url이 아닌 url 변화와 상관없이 모두 이 값으로 캐시된다.
   @CacheTTL(1_000)
   getMovieRecent() {
-    console.log('getMovieRecent() 실행!');
     return this.movieService.findRecent();
   }
 

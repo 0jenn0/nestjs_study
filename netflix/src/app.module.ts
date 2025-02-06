@@ -29,6 +29,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CommonModule } from './common/common.module';
 import { MovieUserLike } from './movie/entity/movie-user-like.entity';
+import { CacheModule } from '@nestjs/cache-manager';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -81,6 +82,10 @@ import { MovieUserLike } from './movie/entity/movie-user-like.entity';
     AuthModule,
     UserModule,
     CommonModule,
+    CacheModule.register({
+      ttl: 0,
+      isGlobal: true,
+    }),
   ],
   providers: [
     {
