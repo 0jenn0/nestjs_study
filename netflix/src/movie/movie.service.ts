@@ -66,13 +66,16 @@ export class MovieService {
 
     if (userId) {
       const movieIds = data.map(movie => movie.id);
-      const likedMovies = await this.movieUserLikeRepository
-        .createQueryBuilder('mul')
-        .leftJoinAndSelect('mul.movie', 'movie')
-        .leftJoinAndSelect('mul.user', 'user')
-        .where('movie.id IN (:...movieIds)', { movieIds })
-        .andWhere('user.id = :userId', { userId })
-        .getMany();
+      const likedMovies =
+        movieIds.length < 1 // movieIds가 없으면 (:...movieIds) 여기서 에러나기때문에 이렇게해줘야함.
+          ? []
+          : await this.movieUserLikeRepository
+              .createQueryBuilder('mul')
+              .leftJoinAndSelect('mul.movie', 'movie')
+              .leftJoinAndSelect('mul.user', 'user')
+              .where('movie.id IN (:...movieIds)', { movieIds })
+              .andWhere('user.id = :userId', { userId })
+              .getMany();
 
       const likedMovieMap = likedMovies.reduce((acc, next) => {
         acc[next.movie.id] = next.isLike;
