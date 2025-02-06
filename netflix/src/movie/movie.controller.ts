@@ -42,8 +42,8 @@ export class MovieController {
   @Get()
   @Public()
   @UseInterceptors(CacheInterceptor)
-  getMovies(@Query() dto: GetMovieDto) {
-    return this.movieService.findAll(dto);
+  getMovies(@Query() dto: GetMovieDto, @UserId() userId?: number) {
+    return this.movieService.findAll(dto, userId);
   }
 
   @Get(':id')
