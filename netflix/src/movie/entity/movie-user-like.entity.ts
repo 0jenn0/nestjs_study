@@ -8,14 +8,18 @@ export class MovieUserLike {
     name: 'movieId',
     type: 'int8',
   }) // relation으로 할 때는 자동으로 type과 column이름 유추가 안되기때문에 직접 넣어줘야한다.
-  @ManyToOne(() => Movie, movie => movie.likedUsers)
+  @ManyToOne(() => Movie, movie => movie.likedUsers, {
+    onDelete: 'CASCADE',
+  })
   movie: Movie;
 
   @PrimaryColumn({
     name: 'userId',
     type: 'int8',
   })
-  @ManyToOne(() => User, user => user.likedMovies)
+  @ManyToOne(() => User, user => user.likedMovies, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @Column()
