@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -18,6 +19,7 @@ import { join } from 'path';
 import { rename } from 'fs/promises';
 import { User } from '@/user/entities/user.entity';
 import { MovieUserLike } from './entity/movie-user-like.entity';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 // export class MovieService extends CommonService { // 이렇게 하면 상속받아서도 가능
@@ -44,7 +46,29 @@ export class MovieService {
     private readonly dataSource: DataSource,
 
     private readonly commonService: CommonService,
+
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
   ) {}
+
+  async findRecent() {
+    const cacheData = await this.cacheManager.get('MOVIE_RECENT');
+
+    if (cacheData) {
+      return cacheData;
+    }
+
+    const data = await this.movieRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 10,
+    });
+
+    await this.cacheManager.set('MOVIE_RECENT', data, 0); // 이 곳 ttl이 상위 ttl를 오버라이드한다.
+
+    return data;
+  }
 
   async findAll(dto: GetMovieDto, userId?: number) {
     const { title } = dto;
