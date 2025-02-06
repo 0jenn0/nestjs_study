@@ -28,27 +28,31 @@ export class BearerTokenMiddleware implements NestMiddleware {
       return;
     }
 
+    const token = this.validateBearerToken(authHeader);
+
+    const blockedToken = await this.cacheManager.get(`BLOCK_TOKEN_${token}`);
+
+    if (blockedToken) {
+      throw new UnauthorizedException('차단된 토큰입니다!');
+    }
+
+    const tokenKey = `TOKEN_${token}`;
+
+    const cachedPayload = await this.cacheManager.get(tokenKey);
+
+    if (cachedPayload) {
+      req.user = cachedPayload;
+
+      return next();
+    }
+
+    const decodedPayload = this.jwtService.decode(token); // decode: 토큰을 디코딩하여 페이로드를 얻는다. 만료가됐는지 이런거 검증 안한다.
+
+    if (decodedPayload.type !== 'refresh' && decodedPayload.type !== 'access') {
+      throw new UnauthorizedException('잘못된 토큰입니다.');
+    }
+
     try {
-      const token = this.validateBearerToken(authHeader);
-      const tokenKey = `TOKEN_${token}`;
-
-      const cachedPayload = await this.cacheManager.get(tokenKey);
-
-      if (cachedPayload) {
-        req.user = cachedPayload;
-
-        return next();
-      }
-
-      const decodedPayload = this.jwtService.decode(token); // decode: 토큰을 디코딩하여 페이로드를 얻는다. 만료가됐는지 이런거 검증 안한다.
-
-      if (
-        decodedPayload.type !== 'refresh' &&
-        decodedPayload.type !== 'access'
-      ) {
-        throw new UnauthorizedException('잘못된 토큰입니다.');
-      }
-
       const secretKey =
         decodedPayload.type === 'refresh'
           ? envVariablesKeys.refreshTokenSecret

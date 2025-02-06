@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Headers,
@@ -28,6 +29,11 @@ export class AuthController {
   // authorization: refresh Token
   loginUser(@Headers('authorization') token: string) {
     return this.authService.login(token);
+  }
+
+  @Post('token/block')
+  blockToken(@Body('token') token: string) {
+    return this.authService.tokenBlock(token);
   }
 
   @Post('token/access')

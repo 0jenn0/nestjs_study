@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { Role, User } from '@/user/entities/user.entity';
 import {
   BadRequestException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { envVariablesKeys } from '@/common/const/env.const';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +20,30 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
   ) {}
+
+  async tokenBlock(token: string) {
+    /**
+     * verify가 아닌 decode를 사용하는 이유:
+     * 어차피 block할거 유효한지 안유효한지 알 필요 없음
+     */
+    const payload = await this.jwtService.decode(token);
+
+    const expiryDate = +new Date(payload['exp'] * 1_000);
+    const now = +Date.now();
+
+    const differenceInSeconds = (expiryDate - now) / 1_000;
+
+    await this.cacheManager.set(
+      `BLOCK_TOKEN_${token}`,
+      payload,
+      Math.max(differenceInSeconds * 1_000, 1),
+    );
+
+    return true;
+  }
 
   parseBasicToken(rawToken: string) {
     const basicSplit = rawToken.split(' ');
