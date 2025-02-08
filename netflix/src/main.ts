@@ -1,16 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['verbose'], // verbose 레벨 로그만 출력되는게 아니라 그 위 레벨 로그도 출력된다.
   });
-  app.enableVersioning({
-    type: VersioningType.HEADER,
-    header: 'version',
-  });
+  // app.enableVersioning({
+  //   type: VersioningType.HEADER,
+  //   header: 'version',
+  // });
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.useGlobalPipes(
     new ValidationPipe({
