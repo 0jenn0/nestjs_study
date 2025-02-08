@@ -1,11 +1,17 @@
+import { Movie } from '@/movie/entity/movie.entity';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Cron } from '@nestjs/schedule';
 import { readdir, unlink } from 'fs/promises';
 import { join, parse } from 'path';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TasksService {
-  constructor() {}
+  constructor(
+    @InjectRepository(Movie)
+    private readonly movieRepository: Repository<Movie>,
+  ) {}
 
   logEverySecond() {
     console.log('1초 마다 실행');
@@ -38,6 +44,28 @@ export class TasksService {
       deleteFilesTargets.map(async filename => {
         unlink(join(process.cwd(), 'public', 'temp', filename));
       }),
+    );
+  }
+
+  @Cron('0 * * * * *') // 초 분 시 일 월 요일
+  async calculateMovieLikeCounts() {
+    await this.movieRepository.query(
+      `
+        UPDATE movie m
+        SET "likeCount" = (
+            SELECT COUNT(*) FROM movie_user_like mul
+            WHERE mul."movieId" = m.id AND mul."isLike" = true
+        )
+        `,
+    );
+
+    await this.movieRepository.query(
+      `
+         UPDATE movie m
+        SET "dislikeCount" = (
+            SELECT COUNT(*) FROM movie_user_like mul
+            WHERE mul."movieId" = m.id AND mul."isLike" = false
+        )`,
     );
   }
 }
