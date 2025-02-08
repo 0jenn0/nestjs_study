@@ -35,8 +35,8 @@
 | 20. File Upload      |  ✅  |
 | 21. Custom Decorator |  ✅  |
 | 22. 좋아요 시스템    |  ✅  |
-| 23. 캐싱             |  ❌  |
-| 24. Task Scheduling  |  ❌  |
+| 23. 캐싱             |  ✅  |
+| 24. Task Scheduling  |  ✅  |
 | 25. Logging          |  ❌  |
 | 26. Versioning       |  ❌  |
 | 27. Swagger          |  ❌  |
