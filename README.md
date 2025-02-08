@@ -37,8 +37,8 @@
 | 22. 좋아요 시스템    |  ✅  |
 | 23. 캐싱             |  ✅  |
 | 24. Task Scheduling  |  ✅  |
-| 25. Logging          |  ❌  |
-| 26. Versioning       |  ❌  |
+| 25. Logging          |  ✅  |
+| 26. Versioning       |  ✅  |
 | 27. Swagger          |  ❌  |
 | 28. 테스트           |  ❌  |
 | 29. 배포와 CI/CD     |  ❌  |
