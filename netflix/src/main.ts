@@ -8,7 +8,8 @@ async function bootstrap() {
     logger: ['verbose'], // verbose 레벨 로그만 출력되는게 아니라 그 위 레벨 로그도 출력된다.
   });
   app.enableVersioning({
-    type: VersioningType.URI,
+    type: VersioningType.HEADER,
+    header: 'version',
   });
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.useGlobalPipes(

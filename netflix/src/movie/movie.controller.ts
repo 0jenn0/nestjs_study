@@ -9,7 +9,6 @@ import {
   Query,
   UseInterceptors,
   ParseIntPipe,
-  Version,
   // UseGuards,
 
   // UploadedFile,
@@ -43,7 +42,7 @@ import { Throttle } from '@/common/decorator/throttle.decorator';
 
 @Controller({
   path: 'movie',
-  version: ['1', '2'], // string도 가능
+  version: '1',
 })
 @UseInterceptors(ClassSerializerInterceptor) // 이거 추가해야 class-transformer 사용 가능
 export class MovieController {
@@ -52,7 +51,6 @@ export class MovieController {
   @Get()
   @Public()
   @Throttle({ count: 5, unit: 'minute' })
-  @Version(['1', '3'])
   @UseInterceptors(CacheInterceptor)
   getMovies(@Query() dto: GetMovieDto, @UserId() userId?: number) {
     return this.movieService.findAll(dto, userId);
