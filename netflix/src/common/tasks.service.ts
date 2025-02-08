@@ -1,11 +1,12 @@
 import { Movie } from '@/movie/entity/movie.entity';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { readdir, unlink } from 'fs/promises';
 import { join, parse } from 'path';
 import { Repository } from 'typeorm';
-import { DefaultLogger } from './logger/default.logger';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+// import { DefaultLogger } from './logger/default.logger';
 
 @Injectable()
 export class TasksService {
@@ -15,7 +16,9 @@ export class TasksService {
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
     private readonly schedulerRegistry: SchedulerRegistry,
-    private readonly logger: DefaultLogger,
+    // private readonly logger: DefaultLogger,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
 
   logEverySecond() {
@@ -80,12 +83,12 @@ export class TasksService {
   })
   printer() {
     // 중요도 내림차순으로 정리한것.
-    this.logger.fatal('FATAL 레벨 로그'); // 치명적인 오류. 당장 고쳐야할 에러
-    this.logger.error('ERROR 레벨 로그'); // 실제 오류가 났을 때
-    this.logger.warn('WARN 레벨 로그'); // 이러나지 말아야할 오류가 나긴하는데 프로그램 실행에 문제는 안생기는 오류
-    this.logger.log('LOG 레벨 로그'); // 정보성 로그를 작성할 때
-    this.logger.debug('DEBUG 레벨 로그'); // 프로덕션이 아닌 개발환경에서 중요한 로그
-    this.logger.verbose('VERBOSE 레벨 로그'); // 진짜 중요하지 않은 로그.
+    this.logger.error('FATAL 레벨 로그', null, TasksService.name); // 치명적인 오류. 당장 고쳐야할 에러
+    this.logger.error('ERROR 레벨 로그', null, TasksService.name); // 실제 오류가 났을 때
+    this.logger.warn('WARN 레벨 로그', TasksService.name); // 이러나지 말아야할 오류가 나긴하는데 프로그램 실행에 문제는 안생기는 오류
+    this.logger.log('LOG 레벨 로그', TasksService.name); // 정보성 로그를 작성할 때
+    this.logger.debug('DEBUG 레벨 로그', TasksService.name); // 프로덕션이 아닌 개발환경에서 중요한 로그
+    this.logger.verbose('VERBOSE 레벨 로그', TasksService.name); // 진짜 중요하지 않은 로그.
   }
 
   //   @Cron('*/5 * * * * *', {
