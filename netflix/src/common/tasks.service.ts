@@ -1,7 +1,7 @@
 import { Movie } from '@/movie/entity/movie.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Cron } from '@nestjs/schedule';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { readdir, unlink } from 'fs/promises';
 import { join, parse } from 'path';
 import { Repository } from 'typeorm';
@@ -11,6 +11,7 @@ export class TasksService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
   logEverySecond() {
@@ -67,5 +68,37 @@ export class TasksService {
             WHERE mul."movieId" = m.id AND mul."isLike" = false
         )`,
     );
+  }
+
+  @Cron('* * * * * *', {
+    // 가급적이면 cron job을 다이나믹 보다는 이렇게 선언적으로 사용하는게 좋다.
+    name: 'printer',
+  })
+  printer() {
+    console.log('print every seconds');
+  }
+
+  @Cron('*/5 * * * * *', {
+    name: 'printer2',
+  })
+  stopper() {
+    console.log('----stopper run----');
+
+    const job = this.schedulerRegistry.getCronJob('printer');
+
+    console.log('# Last Date');
+    console.log(job.lastDate());
+
+    console.log('# Next Date');
+    console.log(job.nextDate());
+
+    console.log('# Next Dates');
+    console.log(job.nextDates(5));
+
+    if (job.running) {
+      job.stop();
+    } else {
+      job.start();
+    }
   }
 }
