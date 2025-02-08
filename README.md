@@ -39,6 +39,6 @@
 | 24. Task Scheduling  |  ✅  |
 | 25. Logging          |  ✅  |
 | 26. Versioning       |  ✅  |
-| 27. Swagger          |  ❌  |
+| 27. Swagger          |  ✅  |
 | 28. 테스트           |  ❌  |
 | 29. 배포와 CI/CD     |  ❌  |
