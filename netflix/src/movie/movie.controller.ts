@@ -39,12 +39,14 @@ import {
   CacheInterceptor as CI,
 } from '@nestjs/cache-manager';
 import { Throttle } from '@/common/decorator/throttle.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 // @Controller({
 //   path: 'movie',
 //   version: '1',
 // })
 @Controller('movie')
+@ApiBearerAuth()
 @UseInterceptors(ClassSerializerInterceptor) // 이거 추가해야 class-transformer 사용 가능
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
