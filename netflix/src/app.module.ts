@@ -23,13 +23,14 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { RBACGuard } from './auth/guard/rbac.guard';
 import { ResponseTimeInterceptor } from './common/interceptor/response-time.interceptor';
-import { ForbiddenExceptionFilter } from './common/filter/forbidden.filter';
+// import { ForbiddenExceptionFilter } from './common/filter/forbidden.filter';
 import { QueryFailedErrorFilter } from './common/filter/query-failed.filter';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CommonModule } from './common/common.module';
 import { MovieUserLike } from './movie/entity/movie-user-like.entity';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ThrottleInterceptor } from './common/interceptor/throttle.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -100,13 +101,17 @@ import { CacheModule } from '@nestjs/cache-manager';
       provide: APP_INTERCEPTOR,
       useClass: ResponseTimeInterceptor,
     },
-    {
-      provide: APP_FILTER,
-      useClass: ForbiddenExceptionFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: ForbiddenExceptionFilter,
+    // },
     {
       provide: APP_FILTER,
       useClass: QueryFailedErrorFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ThrottleInterceptor,
     },
   ],
 })

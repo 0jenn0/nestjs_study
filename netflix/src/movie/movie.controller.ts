@@ -38,6 +38,7 @@ import {
   CacheTTL,
   CacheInterceptor as CI,
 } from '@nestjs/cache-manager';
+import { Throttle } from '@/common/decorator/throttle.decorator';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 이거 추가해야 class-transformer 사용 가능
@@ -46,6 +47,7 @@ export class MovieController {
 
   @Get()
   @Public()
+  @Throttle({ count: 5, unit: 'minute' })
   @UseInterceptors(CacheInterceptor)
   getMovies(@Query() dto: GetMovieDto, @UserId() userId?: number) {
     return this.movieService.findAll(dto, userId);
