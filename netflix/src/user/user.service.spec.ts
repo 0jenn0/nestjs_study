@@ -70,4 +70,27 @@ describe('UserService', () => {
       });
     });
   });
+
+  describe('remove', () => {
+    it('should delete a user by id', async () => {
+      const id = 1;
+      mockUserRepository.findOne.mockResolvedValue({ id });
+
+      const result = await userService.remove(id);
+
+      expect(result).toEqual(id);
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+        where: { id },
+      });
+    });
+
+    it('should throw a NotFoundException if user is not found', async () => {
+      mockUserRepository.findOne.mockResolvedValue(null);
+
+      await expect(userService.remove(1)).rejects.toThrow(NotFoundException);
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
+    });
+  });
 });
