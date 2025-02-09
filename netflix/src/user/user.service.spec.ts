@@ -12,7 +12,7 @@ const mockUserRepository = {
 };
 
 describe('UserService', () => {
-  let service: UserService;
+  let userService: UserService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,10 +22,27 @@ describe('UserService', () => {
       ],
     }).compile();
 
-    service = module.get<UserService>(UserService);
+    userService = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(userService).toBeDefined();
+  });
+
+  describe('findAll', () => {
+    it('should return all users', async () => {
+      const users = [
+        {
+          id: 1,
+          email: 'test@test.com',
+        },
+      ];
+      mockUserRepository.find.mockResolvedValue(users);
+
+      const result = await userService.findAll();
+
+      expect(mockUserRepository.find).toHaveBeenCalled();
+      expect(result).toEqual(users);
+    });
   });
 });
